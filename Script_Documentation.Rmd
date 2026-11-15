@@ -1,0 +1,110 @@
+---
+title: "Documenting the Synthetic Study Hours Script"
+date: "2026-11-15"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    mathjax: null
+---
+
+**AI Assistance Declaration:** ChatGPT (Codex, GPT-6), used on November 15, 2026, drafted and refined the documentation, reflection responses, R script, and fictional dataset. The actual requests, assignment-prescribed drafting prompts, key responses, and revisions are recorded in `Appendix.md`. Assistant checks are recorded in `Verification.md`; student verification and final calculations remain pending. This package does not claim that the student has completed those steps.
+
+<style>
+table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+th, td { padding: 8px 10px; border: 1px solid #d5dfe6; text-align: left; overflow-wrap: anywhere; }
+th { background: #eef4f7; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media print { pre, table { break-inside: avoid; } h1, h2, h3 { break-after: avoid; } }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = TRUE, message = TRUE)
+```
+
+# Purpose
+
+This document explains `scripts/analyze_study_data.R`. The script imports a fictional study-hours dataset, validates it, creates descriptive summaries, and saves a scatterplot. It demonstrates a reproducible documentation workflow; it does not establish an educational finding.
+
+## Inputs
+
+The input is `data/synthetic_study_data.csv`, containing 30 invented records. `student_id` is a unique text identifier; `study_hours` measures hours in the week before the fictional exam; `exam_score` is a score out of 100. There are no real student records.
+
+Keep this `.Rmd` file in the project root alongside `data/` and `scripts/`. Knit it in RStudio or run `rmarkdown::render("Script_Documentation.Rmd")` from that folder.
+
+```{r inspect-input}
+study <- read.csv("data/synthetic_study_data.csv",
+                  stringsAsFactors = FALSE)
+head(study)
+```
+
+## Dependencies
+
+The script uses standard R functionality. Knitting this document additionally requires `rmarkdown`, `knitr`, and Pandoc. Install R packages once in the console; do not install packages inside the report's executable chunks.
+
+# Workflow
+
+## 1. Read and validate the data
+
+The function `analyze_study_data()` checks file existence and requires exactly three named columns. It rejects empty data, missing cells, duplicate IDs, IDs that do not match the S-plus-three-digits format, nonnumeric or nonfinite measurements, hours outside 0-168, and scores outside 0-100. Errors stop execution before results are written.
+
+This illustrative excerpt shows the expected column contract; the authoritative implementation is the R script.
+
+```{r column-contract, eval=FALSE}
+expected <- c("student_id", "study_hours", "exam_score")
+if (!identical(names(study), expected) || nrow(study) == 0L) {
+  stop("Expected nonempty data with student_id, study_hours, exam_score.")
+}
+```
+
+## 2. Run the documented script
+
+The source call below executes the single authoritative analysis script. Its last line calls `analyze_study_data()`, so sourcing is sufficient: do not add a second call merely to run it once.
+
+```{r run-analysis}
+source("scripts/analyze_study_data.R")
+```
+
+For each numeric variable, the script computes count, arithmetic mean, median, minimum, and maximum. The mean uses the sum divided by the number of records. The median is the middle value after sorting, or the mean of the two middle values when the record count is even. No statistical model, hypothesis test, or causal estimate is produced.
+
+## 3. Display the exported table
+
+Read the file produced by the script instead of maintaining a second copy of the summary logic in the report.
+
+```{r summary-table}
+results <- read.csv("outputs/summary_statistics.csv")
+knitr::kable(results, digits = 2,
+             caption = "Descriptive summary of fictional observations")
+```
+
+## 4. Display a scatterplot
+
+The script saves a PDF plot separately. This chunk redraws the same points in the HTML report so the plot is visible without a PDF viewer. It performs no additional statistical analysis.
+
+```{r scatterplot, fig.width=7, fig.height=5, fig.cap="Fictional observations for documentation practice."}
+plot(study$study_hours, study$exam_score,
+     main = "Study Hours and Exam Scores (Synthetic Data)",
+     xlab = "Study hours in the week before the exam",
+     ylab = "Exam score (out of 100)",
+     pch = 19, col = "steelblue", ylim = c(0, 100))
+```
+
+# Outputs
+
+| File | Purpose |
+| --- | --- |
+| `outputs/summary_statistics.csv` | Summary table with one row per numeric variable |
+| `outputs/study_hours_vs_exam_score.pdf` | Standalone scatterplot |
+| `Script_Documentation.html` | Knitted document with code, results, and embedded plot |
+
+The output directory is created automatically. Re-running replaces the two analysis outputs. Input data are not overwritten. The analysis function returns the summary invisibly and prints it for inspection.
+
+# Verification and Limitations
+
+The assistant executed the script and knitted this report using R 4.5.0, rmarkdown 2.29, and knitr 1.50. All six chunks were processed successfully (the illustrative excerpt is intentionally not evaluated). The 10 summary values matched an independent Python calculation to numerical tolerance. Missing-input, duplicate-ID, and out-of-range-score checks also passed. The generated summary and plot were inspected. The first knit exposed an isolated-runtime dependency setup issue, which was corrected before a successful knit; no analysis-code error was found. These are assistant checks, not the student's own verification. See `Verification.md`.
+
+Complete the assignment's primary spreadsheet calculations yourself, compare them with the R output, and perform a peer or self spot-check. Do not copy an AI-generated result and label it a personal calculation. All observations are deliberately fictional, so a visible pattern cannot support real-world or causal conclusions.
+
+# Documentation Reference
+
+The [official R Markdown code-chunk guide](https://rmarkdown.rstudio.com/lesson-3.html) explains executable chunks and their options. This document uses named chunks, `include=FALSE` for setup, and `eval=FALSE` for a displayed excerpt; warnings remain visible during validation.

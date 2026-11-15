@@ -2,6 +2,8 @@
 
 # Synthetic Study Hours and Exam Scores
 
+Repository: [js6h7zffg9-cyber/markdown-buddy-ali](https://github.com/js6h7zffg9-cyber/markdown-buddy-ali).
+
 ## Overview
 
 This BDA400 project demonstrates clear documentation for a small R analysis. One script imports a synthetic dataset, validates its contents, summarizes two numeric variables, and exports a scatterplot. The data contain **30 invented records** and no real student information.
@@ -79,7 +81,7 @@ The script rejects empty input, unexpected columns, missing values, duplicate or
 
 If an input-file error appears, run `getwd()` and confirm that `data/synthetic_study_data.csv` exists relative to that directory. If knitting reports a missing package, install the documentation packages above. Check output-directory write permissions if exports fail.
 
-The assistant checked CSV structure, documentation links, Markdown structure, actual R execution, a successful HTML knit, input-error handling, and independent numerical agreement. The student's spreadsheet calculations and personal review, GitHub preview, and LMS submission remain outstanding as recorded in `Verification.md`.
+The assistant checked CSV structure, documentation links, Markdown structure, actual R execution, a successful HTML knit, input-error handling, and independent numerical agreement. The GitHub README preview was also inspected. The student's spreadsheet calculations and personal review, and LMS submission remain outstanding as recorded in `Verification.md`.
 
 ## License
 
